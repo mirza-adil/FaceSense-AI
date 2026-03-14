@@ -49,7 +49,7 @@ fun App() {
                 ) {
                     when {
                         state.isLoading -> CircularProgressIndicator()
-                        state.error != null -> Text(state.error!!)
+                        state.error != null -> Text(state.error ?: "")
                         else -> {
                             Image(painterResource(Res.drawable.compose_multiplatform), null)
                             Text("Compose: ${state.message}")

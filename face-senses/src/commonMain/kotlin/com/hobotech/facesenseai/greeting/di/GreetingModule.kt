@@ -4,10 +4,7 @@ import com.hobotech.facesenseai.greeting.presentation.GreetingViewModel
 import kotlinx.coroutines.CoroutineScope
 import org.koin.dsl.module
 
-/**
- * Koin module for the greeting feature.
- * GreetingViewModel is obtained with parametersOf(scope) where scope is viewModelScope (Android) or MainScope() (iOS).
- */
+/** GreetingViewModel is created with parametersOf(scope): viewModelScope on Android, MainScope on iOS. */
 val greetingModule = module {
     factory { (scope: CoroutineScope) ->
         GreetingViewModel(get(), scope)

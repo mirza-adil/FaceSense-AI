@@ -6,11 +6,11 @@ import com.hobotech.facesenseai.di.initKoin
 import com.hobotech.facesenseai.di.platformModule
 import com.hobotech.facesenseai.greeting.di.greetingModule
 
-private val initKoinOnce = run {
+private val koinInitialized = run {
     initKoin(listOf(platformModule(), domainModule, greetingModule))
 }
 
 fun MainViewController() = ComposeUIViewController {
-    initKoinOnce
+    koinInitialized
     App()
 }

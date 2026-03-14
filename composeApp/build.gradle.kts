@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -31,21 +30,20 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(project(":shared:data"))
             implementation(project(":shared:di"))
-            implementation(project(":feature-greeting"))
+            implementation(project(":face-senses"))
             implementation(libs.koin.android)
-            implementation(libs.koin.androidx.viewmodel)
             implementation(libs.koin.androidx.compose)
         }
         iosMain.dependencies {
             implementation(project(":shared:data"))
             implementation(project(":shared:di"))
-            implementation(project(":feature-greeting"))
+            implementation(project(":face-senses"))
         }
         commonMain.dependencies {
             implementation(project(":shared:domain"))
             implementation(project(":shared:data"))
             implementation(project(":shared:di"))
-            implementation(project(":feature-greeting"))
+            implementation(project(":face-senses"))
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)

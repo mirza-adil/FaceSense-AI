@@ -28,4 +28,4 @@ dependencyResolutionManagement {
     }
 }
 
-include(":composeApp", ":shared:domain", ":shared:data", ":shared:di", ":feature-greeting")
+include(":composeApp", ":shared:domain", ":shared:data", ":shared:di", ":face-senses")
