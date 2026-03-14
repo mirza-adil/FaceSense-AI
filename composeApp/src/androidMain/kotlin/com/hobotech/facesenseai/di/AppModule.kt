@@ -1,19 +1,20 @@
 package com.hobotech.facesenseai.di
 
 import androidx.lifecycle.ViewModel
-import com.hobotech.facesenseai.greeting.presentation.GreetingViewModel
-import org.koin.core.module.dsl.viewModel
+import androidx.lifecycle.viewModelScope
+import com.hobotech.facesenseai.greeting.presentation.FaceSenseViewModel
 import org.koin.core.context.GlobalContext
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 
-/** Android app Koin: GreetingHostViewModel provides GreetingViewModel with viewModelScope. */
+/** Android app Koin: FaceSenseHostViewModel provides FaceSenseViewModel with viewModelScope. */
 val appModule = module {
-    viewModel { GreetingHostViewModel() }
+    viewModel { FaceSenseHostViewModel() }
 }
 
-class GreetingHostViewModel : ViewModel() {
-    val greetingViewModel: GreetingViewModel by lazy {
+class FaceSenseHostViewModel : ViewModel() {
+    val faceSenseViewModel: FaceSenseViewModel by lazy {
         GlobalContext.get().get { parametersOf(viewModelScope) }
     }
 }

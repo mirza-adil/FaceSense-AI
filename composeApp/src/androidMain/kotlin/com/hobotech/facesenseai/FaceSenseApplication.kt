@@ -5,7 +5,7 @@ import com.hobotech.facesenseai.di.appModule
 import com.hobotech.facesenseai.di.domainModule
 import com.hobotech.facesenseai.di.initKoin
 import com.hobotech.facesenseai.di.platformModule
-import com.hobotech.facesenseai.greeting.di.greetingModule
+import com.hobotech.facesenseai.greeting.di.faceSenseModule
 
 class FaceSenseApplication : Application() {
     override fun onCreate() {
@@ -14,7 +14,7 @@ class FaceSenseApplication : Application() {
             listOf(
                 platformModule(),
                 domainModule,
-                greetingModule,
+                faceSenseModule,
                 appModule
             )
         )

@@ -15,7 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.hobotech.facesenseai.greeting.greetingViewModel
+import com.hobotech.facesenseai.greeting.faceSenseViewModel
 import org.jetbrains.compose.resources.painterResource
 
 import facesenseai.composeapp.generated.resources.Res
@@ -25,7 +25,7 @@ import facesenseai.composeapp.generated.resources.compose_multiplatform
 @Preview
 fun App() {
     MaterialTheme {
-        val viewModel = greetingViewModel()
+        val viewModel = faceSenseViewModel()
         val state by viewModel.state.collectAsState(initial = viewModel.state.value)
         var showContent by remember { mutableStateOf(false) }
 
@@ -38,7 +38,7 @@ fun App() {
         ) {
             Button(onClick = {
                 showContent = !showContent
-                if (showContent) viewModel.loadGreeting()
+                if (showContent) viewModel.load()
             }) {
                 Text("Click me!")
             }

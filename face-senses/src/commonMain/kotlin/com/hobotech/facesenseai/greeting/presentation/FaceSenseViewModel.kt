@@ -7,14 +7,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class GreetingViewModel(
+class FaceSenseViewModel(
     private val getGreetingUseCase: GetGreetingUseCase,
     private val scope: CoroutineScope
 ) {
-    private val _state = MutableStateFlow(GreetingUiState())
-    val state: StateFlow<GreetingUiState> = _state.asStateFlow()
+    private val _state = MutableStateFlow(FaceSenseUiState())
+    val state: StateFlow<FaceSenseUiState> = _state.asStateFlow()
 
-    fun loadGreeting() {
+    fun load() {
         scope.launch {
             _state.value = _state.value.copy(isLoading = true)
             runCatching { getGreetingUseCase() }

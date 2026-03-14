@@ -4,10 +4,10 @@ import androidx.compose.ui.window.ComposeUIViewController
 import com.hobotech.facesenseai.di.domainModule
 import com.hobotech.facesenseai.di.initKoin
 import com.hobotech.facesenseai.di.platformModule
-import com.hobotech.facesenseai.greeting.di.greetingModule
+import com.hobotech.facesenseai.greeting.di.faceSenseModule
 
 private val koinInitialized = run {
-    initKoin(listOf(platformModule(), domainModule, greetingModule))
+    initKoin(listOf(platformModule(), domainModule, faceSenseModule))
 }
 
 fun MainViewController() = ComposeUIViewController {

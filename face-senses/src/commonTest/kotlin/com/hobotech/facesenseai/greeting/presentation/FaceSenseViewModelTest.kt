@@ -13,20 +13,20 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class GreetingViewModelTest {
+class FaceSenseViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
     private val testScope = TestScope(testDispatcher)
 
     @Test
-    fun loadGreeting_success_updatesStateWithMessage() = runTest {
+    fun load_success_updatesStateWithMessage() = runTest {
         val repository = object : GreetingRepository {
             override suspend fun getGreeting(): GreetingMessage = GreetingMessage("Hello, KMP!")
         }
         val useCase = GetGreetingUseCase(repository)
-        val viewModel = GreetingViewModel(useCase, testScope)
+        val viewModel = FaceSenseViewModel(useCase, testScope)
 
-        viewModel.loadGreeting()
+        viewModel.load()
         testDispatcher.scheduler.advanceUntilIdle()
 
         val state = viewModel.state.first()
@@ -36,14 +36,14 @@ class GreetingViewModelTest {
     }
 
     @Test
-    fun loadGreeting_failure_updatesStateWithError() = runTest {
+    fun load_failure_updatesStateWithError() = runTest {
         val repository = object : GreetingRepository {
             override suspend fun getGreeting(): GreetingMessage = throw RuntimeException("Network error")
         }
         val useCase = GetGreetingUseCase(repository)
-        val viewModel = GreetingViewModel(useCase, testScope)
+        val viewModel = FaceSenseViewModel(useCase, testScope)
 
-        viewModel.loadGreeting()
+        viewModel.load()
         testDispatcher.scheduler.advanceUntilIdle()
 
         val state = viewModel.state.first()
