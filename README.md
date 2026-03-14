@@ -6,7 +6,47 @@ Secure face verification with liveness check for Android and iOS, built with **K
 
 ## Application Architecture Flow
 
-### High-Level Flow
+### High-Level Flow Diagram
+
+```mermaid
+flowchart TB
+    subgraph UI["composeApp (UI)"]
+        App[App.kt]
+        Preview[CameraPreview]
+        Cards[StatusCard, LivenessCard, etc.]
+        App --> Preview
+        App --> Cards
+    end
+
+    subgraph Presentation["face-senses"]
+        VM[FaceSenseViewModel]
+        State[FaceSenseUiState]
+        VM --> State
+    end
+
+    subgraph Shared["shared modules"]
+        Camera[shared:camera CameraController]
+        AI[shared:ai LivenessDetector]
+        Domain[shared:domain]
+    end
+
+    subgraph DI["shared:di"]
+        Koin[Koin modules]
+    end
+
+    App -->|"faceSenseViewModel()"| VM
+    State -->|"collect state"| App
+    VM -->|"injected"| Camera
+    Camera -->|"callback"| VM
+    Camera -.->|"per face"| AI
+    Camera --> Domain
+    AI --> Domain
+    Koin --> VM
+    Koin --> Camera
+    Koin --> AI
+```
+
+### High-Level Flow (ASCII)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -73,6 +113,92 @@ Secure face verification with liveness check for Android and iOS, built with **K
 | **shared:camera** | Camera abstraction (CameraController, Frame, FaceBounds, FaceAttributes), expect/actual; Android = CameraX + ML Kit. |
 | **shared:ai** | Liveness factory and Android TFLite implementation; depends on domain LivenessDetector. |
 | **shared:di** | Koin modules (domainModule, used by app for initialization). |
+
+---
+
+## MVVM Architecture
+
+The app uses **Model–View–ViewModel (MVVM)** in the presentation layer to separate UI from logic and keep the flow testable and platform-agnostic.
+
+### MVVM Flow Diagram
+
+```mermaid
+flowchart LR
+    subgraph View["View (Compose)"]
+        UI[App, Cards, Buttons]
+    end
+
+    subgraph ViewModel["ViewModel"]
+        VM[FaceSenseViewModel]
+        State[StateFlow UiState]
+        VM --> State
+    end
+
+    subgraph Model["Model"]
+        Domain[Domain models]
+        Camera[CameraController]
+        AI[LivenessDetector]
+    end
+
+    UI -->|"user actions"| VM
+    State -->|"observe state"| UI
+    VM -->|"start/stop/switch, onFrame()"| Camera
+    Camera -->|"frames, bounds, liveness"| VM
+    VM -->|"read/write"| Domain
+    Camera -.->|"uses"| AI
+```
+
+**One-way data flow (detailed):**
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant View as View (Compose)
+    participant VM as FaceSenseViewModel
+    participant Camera as CameraController
+    participant AI as LivenessDetector
+
+    User->>View: Tap "Start camera"
+    View->>VM: startCamera()
+    VM->>Camera: setFrameCallback(onFrame), startPreview()
+    Camera->>AI: detect (per face)
+    AI-->>Camera: LivenessResult
+    Camera->>VM: onFrame(frame, bounds, liveness, attributes)
+    VM->>VM: update _state (UiState)
+    VM-->>View: StateFlow emits new state
+    View->>View: recompose, show UI
+```
+
+### What is MVVM?
+
+- **Model** – Data and business rules. In FaceSense AI this is the domain layer (e.g. `FaceAnalysisResult`, `LivenessResult`, `ActiveLivenessState`) and the data produced by the camera/AI (frames, face bounds, liveness results).
+- **View** – UI that displays data and forwards user actions. Implemented with **Compose** in `composeApp` (e.g. `App.kt`, `StatusCard`, `ActiveLivenessCard`, `ControlButtons`). The View does not hold business logic.
+- **ViewModel** – Holds UI state and handles user (and system) events. It talks to the Model (camera, domain) and exposes a single source of truth for the View. It does not reference the View or Compose.
+
+Data flows **one way**: ViewModel exposes state → View observes and renders; user/system events → ViewModel updates state (and may call camera/use cases).
+
+### How FaceSense AI Uses MVVM
+
+| Layer | In This Project |
+|-------|------------------|
+| **Model** | Domain models (`FaceAnalysisResult`, `LivenessResult`, `BoundingBox`, `ActiveLivenessState`), and the stream of data from `CameraController` (frames, face bounds, attributes, liveness). No UI types here. |
+| **View** | Compose screens in `composeApp`: `App()`, `CameraPreviewCard`, `StatusCard`, `ActiveLivenessCard`, `LivenessResultCard`, `ControlButtons`. They read `state` and call ViewModel methods (e.g. `startCamera()`, `switchCamera()`, `stopCamera()`). |
+| **ViewModel** | `FaceSenseViewModel` in `face-senses`. Holds `FaceSenseUiState` in a `StateFlow`; implements `startCamera()`, `stopCamera()`, `switchCamera()` and the frame callback `onFrame()`. Depends only on `CameraController` (injected via Koin). No Compose or platform UI imports. |
+
+### State Flow
+
+- **ViewModel** owns `_state: MutableStateFlow<FaceSenseUiState>` and exposes `state: StateFlow<FaceSenseUiState>` (read-only).
+- **View** subscribes with `viewModel.state.collect { state = it }` (e.g. in `LaunchedEffect`) and recomposes when `state` changes.
+- **User actions** (e.g. tap “Start camera”) call ViewModel methods; the ViewModel updates `_state` and/or calls the camera; new data arrives via `onFrame()` and again updates `_state`.
+
+So: **one-way data flow**, **single source of truth** in the ViewModel, and **clear separation** so the View only renders and dispatches events.
+
+### Benefits in This Project
+
+- **Testability** – `FaceSenseViewModel` is unit-tested with a fake `CameraController`; no UI needed.
+- **Shared logic** – ViewModel lives in the shared `face-senses` module; the same behavior drives Android and iOS UIs.
+- **Lifecycle-safe** – State is in the ViewModel; configuration changes or recomposition don’t lose it.
+- **Clear roles** – UI only displays and sends events; all coordination and rules live in the ViewModel.
 
 ---
 
