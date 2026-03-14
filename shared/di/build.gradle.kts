@@ -1,0 +1,35 @@
+plugins {
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidLibrary)
+}
+
+kotlin {
+    androidTarget {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "11"
+            }
+        }
+    }
+    listOf(
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "Di"
+            isStatic = true
+        }
+    }
+    sourceSets {
+        commonMain.dependencies {
+            implementation(project(":shared:domain"))
+            implementation(project(":shared:data"))
+            implementation(libs.koin.core)
+        }
+    }
+}
+
+android {
+    namespace = "com.hobotech.facesenseai.di"
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
+}
