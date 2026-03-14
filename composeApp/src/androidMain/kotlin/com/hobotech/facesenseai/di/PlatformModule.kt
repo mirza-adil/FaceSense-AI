@@ -1,13 +1,17 @@
 package com.hobotech.facesenseai.di
 
-import com.hobotech.facesenseai.data.source.PlatformDataSource
-import com.hobotech.facesenseai.getPlatform
+import com.hobotech.facesenseai.ai.createLivenessDetector
+import com.hobotech.facesenseai.camera.CameraController
+import com.hobotech.facesenseai.camera.createCameraController
+import com.hobotech.facesenseai.domain.liveness.LivenessDetector
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 fun platformModule() = module {
-    single<PlatformDataSource> { AndroidPlatformDataSource() }
-}
-
-private class AndroidPlatformDataSource : PlatformDataSource {
-    override fun getPlatformName(): String = getPlatform().name
+    single<LivenessDetector> {
+        createLivenessDetector().apply { setContext(androidContext()) }
+    }
+    single<CameraController> {
+        createCameraController().apply { setLivenessDetector(get<LivenessDetector>()) }
+    }
 }

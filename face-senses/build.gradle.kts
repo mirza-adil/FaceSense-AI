@@ -23,7 +23,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":shared:domain"))
-            implementation(project(":shared:data"))
+            implementation(project(":shared:camera"))
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
         }
@@ -36,6 +36,6 @@ kotlin {
 }
 
 android {
-    namespace = "com.hobotech.facesenseai.greeting"
+    namespace = "com.hobotech.facesenseai.facesense"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 }

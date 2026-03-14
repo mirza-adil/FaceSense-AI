@@ -28,21 +28,24 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
-            implementation(project(":shared:data"))
             implementation(project(":shared:di"))
+            implementation(project(":shared:camera"))
+            implementation(libs.androidx.camera.view)
+            implementation(project(":shared:ai"))
             implementation(project(":face-senses"))
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
         }
         iosMain.dependencies {
-            implementation(project(":shared:data"))
             implementation(project(":shared:di"))
+            implementation(project(":shared:camera"))
+            implementation(project(":shared:ai"))
             implementation(project(":face-senses"))
         }
         commonMain.dependencies {
             implementation(project(":shared:domain"))
-            implementation(project(":shared:data"))
             implementation(project(":shared:di"))
+            implementation(project(":shared:camera"))
             implementation(project(":face-senses"))
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -76,6 +79,9 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+        // Avoid NPE in PackageAndroidArtifact$IncrementalSplitterRunnable (AGP packaging task).
+        // Re-enable for 16 KB page size devices when AGP handles it without NPE:
+        // jniLibs { useLegacyPackaging = false }
     }
     buildTypes {
         getByName("release") {
@@ -86,6 +92,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    buildFeatures {
+        viewBinding = true
+    }
+    dependenciesInfo {
+        includeInApk = true
+        includeInBundle = true
+    }
+    buildToolsVersion = "35.0.0"
+    ndkVersion = "29.0.14206865"
 }
 
 dependencies {

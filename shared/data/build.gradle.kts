@@ -22,7 +22,6 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":shared:domain"))
             implementation(libs.kotlinx.coroutines.core)
         }
         commonTest.dependencies {
