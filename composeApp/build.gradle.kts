@@ -79,9 +79,6 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-        // Avoid NPE in PackageAndroidArtifact$IncrementalSplitterRunnable (AGP packaging task).
-        // Re-enable for 16 KB page size devices when AGP handles it without NPE:
-        // jniLibs { useLegacyPackaging = false }
     }
     buildTypes {
         getByName("release") {

@@ -5,9 +5,7 @@ import com.hobotech.facesenseai.domain.model.LivenessResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/**
- * iOS actual: stub. Replace with TFLite iOS (Core ML or TFLite via CocoaPods) when needed.
- */
+/** iOS stub; replace with Core ML / TFLite when needed. */
 actual fun createLivenessDetector(): LivenessDetector = IosLivenessDetector()
 
 private class IosLivenessDetector : LivenessDetector {
