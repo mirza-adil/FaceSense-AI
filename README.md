@@ -304,7 +304,3 @@ Dependency versions are managed in `gradle/libs.versions.toml`.
 
 - [LinkedIn](https://www.linkedin.com/in/mirzaadil/)
 - [Medium](https://medium.com/@mirzaadil)
-
----
-
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html).
