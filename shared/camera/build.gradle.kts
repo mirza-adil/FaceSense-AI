@@ -37,5 +37,5 @@ kotlin {
 
 android {
     namespace = "com.hobotech.facesenseai.camera"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk = 36
 }

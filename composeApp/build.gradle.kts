@@ -66,12 +66,12 @@ kotlin {
 
 android {
     namespace = "com.hobotech.facesenseai"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.hobotech.facesenseai"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdk = 24
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
     }

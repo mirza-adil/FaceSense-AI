@@ -57,7 +57,6 @@ import com.hobotech.facesenseai.facesense.presentation.ActiveLivenessStep
 import com.hobotech.facesenseai.facesense.presentation.ActiveLivenessState
 import com.hobotech.facesenseai.facesense.presentation.FaceSenseUiState
 import com.hobotech.facesenseai.theme.FaceSenseTheme
-import com.hobotech.facesenseai.showVerificationSuccessToast
 
 private val CardBorderWidth = 1.dp
 

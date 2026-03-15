@@ -30,5 +30,5 @@ kotlin {
 
 android {
     namespace = "com.hobotech.facesenseai.di"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk = 36
 }
