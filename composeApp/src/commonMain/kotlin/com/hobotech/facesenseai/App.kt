@@ -71,7 +71,6 @@ private fun SectionLabel(text: String) {
 }
 
 @Composable
-@Preview
 fun App(context: Any? = null) {
     FaceSenseTheme {
         Surface(
@@ -89,98 +88,147 @@ fun App(context: Any? = null) {
                 }
             }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 20.dp, vertical = 12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            FaceSenseScreen(
+                state = state,
+                onStartCamera = { viewModel.startCamera() },
+                onSwitchCamera = { viewModel.switchCamera() },
+                onStopCamera = { viewModel.stopCamera() }
+            )
+        }
+    }
+}
+
+@Composable
+private fun FaceSenseScreen(
+    state: FaceSenseUiState,
+    onStartCamera: () -> Unit,
+    onSwitchCamera: () -> Unit,
+    onStopCamera: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 20.dp, vertical = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "FaceSense AI",
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+        Text(
+            text = "Secure face verification with liveness check",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(top = 2.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        SectionLabel(text = "Live view")
+        Spacer(modifier = Modifier.height(8.dp))
+        CameraPreviewCard(
+            state = state,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(260.dp)
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        SectionLabel(text = "Status")
+        Spacer(modifier = Modifier.height(8.dp))
+        StatusCard(
+            faceCount = state.detections.size,
+            detections = state.detections,
+            activeLiveness = state.activeLiveness,
+            isAnalyzing = state.isAnalyzing,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        SectionLabel(text = "Verification steps")
+        Spacer(modifier = Modifier.height(8.dp))
+        ActiveLivenessCard(
+            activeLiveness = state.activeLiveness,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        LivenessResultCard(
+            detection = state.detections.firstOrNull(),
+            activeLiveness = state.activeLiveness,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        SectionLabel(text = "Controls")
+        Spacer(modifier = Modifier.height(8.dp))
+        ControlButtons(
+            isFrontCamera = state.isFrontCamera,
+            onStartCamera = onStartCamera,
+            onSwitchCamera = onSwitchCamera,
+            onStopCamera = onStopCamera,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        state.error?.let { error ->
+            Spacer(modifier = Modifier.height(12.dp))
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer
+                ),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Spacer(modifier = Modifier.height(8.dp))
-
                 Text(
-                    text = "FaceSense AI",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = "Secure face verification with liveness check",
+                    text = error,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 2.dp)
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                    modifier = Modifier.padding(14.dp)
                 )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                SectionLabel(text = "Live view")
-                Spacer(modifier = Modifier.height(8.dp))
-                CameraPreviewCard(
-                    state = state,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(260.dp)
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                SectionLabel(text = "Status")
-                Spacer(modifier = Modifier.height(8.dp))
-                StatusCard(
-                    faceCount = state.detections.size,
-                    detections = state.detections,
-                    activeLiveness = state.activeLiveness,
-                    isAnalyzing = state.isAnalyzing,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                SectionLabel(text = "Verification steps")
-                Spacer(modifier = Modifier.height(8.dp))
-                ActiveLivenessCard(
-                    activeLiveness = state.activeLiveness,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                LivenessResultCard(
-                    detection = state.detections.firstOrNull(),
-                    activeLiveness = state.activeLiveness,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                SectionLabel(text = "Controls")
-                Spacer(modifier = Modifier.height(8.dp))
-                ControlButtons(
-                    isFrontCamera = state.isFrontCamera,
-                    onStartCamera = { viewModel.startCamera() },
-                    onSwitchCamera = { viewModel.switchCamera() },
-                    onStopCamera = { viewModel.stopCamera() },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                state.error?.let { error ->
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.errorContainer
-                        ),
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = error,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onErrorContainer,
-                            modifier = Modifier.padding(14.dp)
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
             }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+    }
+}
+
+@Preview
+@Composable
+private fun AppPreview() {
+    FaceSenseTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize().safeContentPadding(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            FaceSenseScreen(
+                state = FaceSenseUiState(
+                    isAnalyzing = true,
+                    detections = listOf(
+                        FaceAnalysisResult(
+                            label = "Face 1",
+                            score = 0.95f,
+                            boundingBox = BoundingBox(
+                                left = 100f,
+                                top = 100f,
+                                right = 500f,
+                                bottom = 700f
+                            )
+                        )
+                    ),
+                    frameWidth = 1080,
+                    frameHeight = 1920
+                ),
+                onStartCamera = {},
+                onSwitchCamera = {},
+                onStopCamera = {}
+            )
         }
     }
 }
