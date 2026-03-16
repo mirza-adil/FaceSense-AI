@@ -6,8 +6,7 @@ Secure face verification with liveness check for Android and iOS, built with **K
 ## Demo Video
 
 Watch a short demo of Face Reorganization:  
-[`https://www.youtube.com/shorts/O5RxkXcfKuo`](https://www.youtube.com/shorts/O5RxkXcfKuo)
-
+[![Watch the demo](https://img.youtube.com/vi/O5RxkXcfKuo/maxresdefault.jpg)](https://www.youtube.com/shorts/O5RxkXcfKuo)
 ## Application Architecture Flow
 
 ### High-Level Flow Diagram
