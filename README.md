@@ -3,6 +3,10 @@
 Secure face verification with liveness check for Android and iOS, built with **Kotlin Multiplatform (KMP)**.
 
 ---
+## Demo Video
+
+Watch a short demo of Face Reorganization:  
+[`https://www.youtube.com/shorts/O5RxkXcfKuo`](https://www.youtube.com/shorts/O5RxkXcfKuo)
 
 ## Application Architecture Flow
 
@@ -304,3 +308,7 @@ Dependency versions are managed in `gradle/libs.versions.toml`.
 
 - [LinkedIn](https://www.linkedin.com/in/mirzaadil/)
 - [Medium](https://medium.com/@mirzaadil)
+
+---
+
+
